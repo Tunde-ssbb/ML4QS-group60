@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plot
 import matplotlib.dates as md
 
-class CreateDataset:
+class CreateDatasetClass:
 
     base_dir = ''
     granularity = 0
@@ -43,10 +43,15 @@ class CreateDataset:
     # Add numerical data, we assume timestamps in the form of nanoseconds from the epoch
     def add_numerical_dataset(self, file, timestamp_col, value_cols, aggregation='avg', prefix=''):
         print(f'Reading data from {file}')
+        
         dataset = pd.read_csv(self.base_dir / file, skipinitialspace=True)
 
         # Convert timestamps to dates
-        dataset[timestamp_col] = pd.to_datetime(dataset[timestamp_col])
+        base_time = pd.to_datetime('2024-01-01')
+        dataset[timestamp_col] = dataset[timestamp_col].astype(float)
+        dataset[timestamp_col] = base_time + pd.to_timedelta(dataset[timestamp_col], unit='s')
+        print(f'Dataset after converting timestamps:\n{dataset.head()}')
+
 
         # Create a table based on the times found in the dataset
         if self.data_table is None:
@@ -63,6 +68,7 @@ class CreateDataset:
                 (dataset[timestamp_col] < (self.data_table.index[i] +
                                            timedelta(milliseconds=self.granularity)))
             ]
+            print(f'Timestamp: {self.data_table.index[i]}, Relevant rows:\n{relevant_rows}')
             for col in value_cols:
                 # Take the average value
                 if len(relevant_rows) > 0:
