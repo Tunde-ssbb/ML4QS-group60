@@ -41,15 +41,29 @@ class CreateDatasetClass:
         self.data_table = pd.DataFrame(index=timestamps, columns=c, dtype=object)
 
     # Add numerical data, we assume timestamps in the form of nanoseconds from the epoch
-    def add_numerical_dataset(self, file, timestamp_col, value_cols, date, relevcols, aggregation='avg', prefix=''):
+    def add_numerical_dataset(self, file, timestamp_col, value_cols, date, aggregation='avg', prefix=''):
         print(f'Reading data from {file}')
         
         dataset = pd.read_csv(self.base_dir / file, skipinitialspace=True)
-
+        takemean = True
         # Convert timestamps to dates
         base_time = pd.to_datetime(date)
-        dataset[timestamp_col] = dataset[timestamp_col].astype(float)
-        dataset[timestamp_col] = base_time + pd.to_timedelta(dataset[timestamp_col], unit='s')
+        try: 
+            dataset[timestamp_col] = dataset[timestamp_col].astype(float)
+            timejump = (dataset[timestamp_col][2]-dataset[timestamp_col][1])*1000
+            dataset[timestamp_col] = base_time + pd.to_timedelta(dataset[timestamp_col], unit='s')
+            print(f'first timestamp {dataset[timestamp_col][0]}')
+        except: 
+            dataset[timestamp_col] = pd.to_datetime(date + ' ' + dataset[timestamp_col], format='%Y-%m-%d %H:%M:%S')
+            timejump = (dataset[timestamp_col][2] - dataset[timestamp_col][1]).total_seconds() * 1000
+            print(f'first timestamp {dataset[timestamp_col][0]}')
+            print(timejump)
+        
+        if self.granularity <= timejump: 
+                takemean = False
+                print(f'fill in empty values {value_cols}')
+        
+        print(f'processed timestamp {dataset[timestamp_col][0]}')
         #print(f'Dataset after converting timestamps:\n{dataset.head()}')
 
 
@@ -60,27 +74,47 @@ class CreateDatasetClass:
             for col in value_cols:
                 self.data_table[str(prefix) + str(col)] = np.nan
         
+        print(f'i am here')
+
+        #select relevant rows in case time between measurements is larger than granularity
+        if not takemean:
+            for j in range(0, len(dataset[timestamp_col])):
+                #print(f'concernign{self.data_table.index}')
+                print(f'dataset row{dataset[timestamp_col]}')
+                relevant_rows2 = self.data_table[
+                    (self.data_table.index >= dataset[timestamp_col][j]) & 
+                    (self.data_table.index < (dataset[timestamp_col][j] + 
+                                            timedelta(milliseconds=timejump)))]
+                for col2 in value_cols:
+                    if len(relevant_rows2 > 0): 
+                        self.data_table.loc[relevant_rows2.index, str(prefix) + str(col2)] = dataset.loc[j, col2]
+                    else: 
+                        print(f'non filled')
+
+
         # Over all rows in the new table
-        for i in range(0, len(self.data_table.index)):
-            # Select the relevant measurements.
-            relevant_rows = dataset[
-                (dataset[timestamp_col] >= self.data_table.index[i]) &
-                (dataset[timestamp_col] < (self.data_table.index[i] +
-                                           timedelta(milliseconds=self.granularity)))
-            ]
-            #print(f'Timestamp: {self.data_table.index[i]}, Relevant rows:\n{relevant_rows}')
-            for col in value_cols:
-                # Take the average value
-                if col not in relevcols:
-                    break
-                if len(relevant_rows) > 0:
-                    if aggregation == 'avg':
-                        self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.average(relevant_rows[col])
+        else:
+            for i in range(0, len(self.data_table.index)):
+                # Select the relevant measurements.
+                relevant_rows = dataset[
+                    (dataset[timestamp_col] >= self.data_table.index[i]) &
+                    (dataset[timestamp_col] < (self.data_table.index[i] +
+                                            timedelta(milliseconds=self.granularity)))
+                ]
+
+                
+                #print(f'Timestamp: {self.data_table.index[i]}, Relevant rows:\n{relevant_rows}')
+                for col in value_cols:
+                    # Take the average value
+                    if len(relevant_rows) > 0:
+                        if aggregation == 'avg':
+                            self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.average(relevant_rows[col])
+                        else:
+                            raise ValueError(f"Unknown aggregation {aggregation}")
                     else:
-                        raise ValueError(f"Unknown aggregation {aggregation}")
-                else:
-                    self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.nan
-                    
+                        self.data_table.loc[self.data_table.index[i], str(prefix)+str(col)] = np.nan
+        
+
 
     # Remove undesired value from the names.
     def clean_name(self, name):
