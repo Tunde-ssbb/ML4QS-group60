@@ -59,16 +59,18 @@ class CreateDatasetClass:
             print(f'first timestamp {dataset[timestamp_col][0]}')
             print(timejump)
         
+        constdelta = True
         if self.granularity <= timejump: 
                 takemean = False
                 print(f'fill in empty values {value_cols}')
+                if timejump != (dataset[timestamp_col][3] - dataset[timestamp_col][2]).total_seconds()*1000:
+                    constdelta = False
+                    print(f'calculate deltas step by step')
 
-        constdelta = True
-        if timejump != (dataset[timestamp_col][3] - dataset[timestamp_col][2]).total_seconds()*1000:
-            constdelta = False
-            print(f'calculate deltas step by step')
         
-        print(f'processed timestamp {dataset[timestamp_col][0]}')
+        
+        
+        #print(f'processed timestamp {dataset[timestamp_col][0]}')
         #print(f'Dataset after converting timestamps:\n{dataset.head()}')
 
 
@@ -79,18 +81,33 @@ class CreateDatasetClass:
             for col in value_cols:
                 self.data_table[str(prefix) + str(col)] = np.nan
         
-        print(f'i am here')
+        #print(f'i am here')
 
         #select relevant rows in case time between measurements is larger than granularity
         if not takemean:
+            stop = False
+            if (dataset[timestamp_col][0] - pd.to_datetime(date + ' ' + '00:00:00', format = '%Y-%m-%d %H:%M:%S')).total_seconds() > 0.0:
+                print(f'first rows being filled { dataset[timestamp_col].iloc[0]}')
+                relevant_rows2 = self.data_table[(self.data_table.index < dataset[timestamp_col][0])]
+                for col2 in value_cols:
+                    if len(relevant_rows2 > 0): 
+                        print(f'lengthe first rows  is {len(relevant_rows2)}')
+                        self.data_table.loc[relevant_rows2.index, str(prefix) + str(col2)] = dataset.loc[0, col2]
+                    else: 
+                        print(f'non filled')
+
             for j in range(0, len(dataset[timestamp_col])):
                 #print(f'concernign{self.data_table.index}')
+                
                 if constdelta == False: 
                     if j < len(dataset[timestamp_col]) -1:
-                        timejump = (dataset[timestamp_col][j] - dataset[timestamp_col][j +1]).total_seconds()*1000
-                    else:
-                        timejump = (dataset[timestamp_col][j] - pd.to_datetime(date + ' ' + '00:05:00', format = '%Y-%m-%d %H:%M:%S')).total_seconds()*1000
-                print(f'dataset row{dataset[timestamp_col]}')
+                        if (pd.to_datetime(date + ' ' + '00:05:00', format = '%Y-%m-%d %H:%M:%S') - dataset[timestamp_col][j+1]).total_seconds() > 0.0:
+                            timejump = (dataset[timestamp_col][j+1] - dataset[timestamp_col][j]).total_seconds()*1000
+                            print(f"interval {timejump}")
+                        else:
+                            timejump = (pd.to_datetime(date + ' ' + '00:05:00', format = '%Y-%m-%d %H:%M:%S')- dataset[timestamp_col][j]).total_seconds()*1000
+                            stop = True
+                print(f'dataset row{dataset[timestamp_col][j]}')
                 relevant_rows2 = self.data_table[
                     (self.data_table.index >= dataset[timestamp_col][j]) & 
                     (self.data_table.index < (dataset[timestamp_col][j] + 
@@ -100,6 +117,8 @@ class CreateDatasetClass:
                         self.data_table.loc[relevant_rows2.index, str(prefix) + str(col2)] = dataset.loc[j, col2]
                     else: 
                         print(f'non filled')
+                if stop: 
+                    break
 
 
         # Over all rows in the new table
