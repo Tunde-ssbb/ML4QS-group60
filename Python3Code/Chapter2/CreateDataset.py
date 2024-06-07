@@ -62,6 +62,11 @@ class CreateDatasetClass:
         if self.granularity <= timejump: 
                 takemean = False
                 print(f'fill in empty values {value_cols}')
+
+        constdelta = True
+        if timejump != (dataset[timestamp_col][3] - dataset[timestamp_col][2]).total_seconds()*1000:
+            constdelta = False
+            print(f'calculate deltas step by step')
         
         print(f'processed timestamp {dataset[timestamp_col][0]}')
         #print(f'Dataset after converting timestamps:\n{dataset.head()}')
@@ -80,6 +85,11 @@ class CreateDatasetClass:
         if not takemean:
             for j in range(0, len(dataset[timestamp_col])):
                 #print(f'concernign{self.data_table.index}')
+                if constdelta == False: 
+                    if j < len(dataset[timestamp_col]) -1:
+                        timejump = (dataset[timestamp_col][j] - dataset[timestamp_col][j +1]).total_seconds()*1000
+                    else:
+                        timejump = (dataset[timestamp_col][j] - pd.to_datetime(date + ' ' + '00:05:00', format = '%Y-%m-%d %H:%M:%S')).total_seconds()*1000
                 print(f'dataset row{dataset[timestamp_col]}')
                 relevant_rows2 = self.data_table[
                     (self.data_table.index >= dataset[timestamp_col][j]) & 
