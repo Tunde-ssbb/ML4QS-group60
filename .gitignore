@@ -1,0 +1,11 @@
+# Environment
+.env
+.venv
+env/
+venv/
+
+# Packages
+site-packages
+
+#lib/
+__pycache__/

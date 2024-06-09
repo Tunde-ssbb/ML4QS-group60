@@ -1,4 +1,4 @@
-from util.util import get_chapter
+from lib.util.util import get_chapter
 
 import matplotlib.colors as cl
 import matplotlib.pyplot as plt
@@ -62,7 +62,7 @@ class VisualizeDataset:
 
         f.subplots_adjust(hspace=0.4)
 
-        xfmt = md.DateFormatter('%H:%M')
+        xfmt = md.DateFormatter('%H:%M:%S.%f')
 
         # Pass through the columns specified.
         for i in range(0, len(columns)):
