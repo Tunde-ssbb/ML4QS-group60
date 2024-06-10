@@ -53,7 +53,7 @@ class OutlierRemoval():
 		cutoff_high = 1.05
 
 		# Removing outliers based on cutoff
-		mask = with_lof['lof'] >= cutoff_low & with_lof['lof'] <= cutoff_high
+		mask = (with_lof['lof'] >= cutoff_low) & (with_lof['lof'] <= cutoff_high)
 		self.combined_data = with_lof[mask]
 		self.combined_data.drop('lof', axis=1, inplace=True)
 		print(f'#rows after outlier removal of col: {col}: {self.combined_data.shape[0]}')
@@ -74,8 +74,8 @@ class OutlierRemoval():
 				self._remove_outliers_density_based(attribute)
 			elif 'leg_gyr' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute)
-			elif 'arm_gyr' in attribute:
-				self._remove_outliers_distribution_based_chauvenet(attribute)
+			#elif 'arm_gyr' in attribute:
+		#		self._remove_outliers_distribution_based_chauvenet(attribute)
 			elif 'leg_acc' in attribute and 'x' in attribute:
 				self._remove_outliers_distribution_based_chauvenet(attribute)
 			elif 'leg_acc' in attribute and 'y' in attribute:
@@ -84,8 +84,8 @@ class OutlierRemoval():
 				self._remove_outliers_distribution_based_mixed_models(attribute)
 			elif 'arm_acc' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute)
-			else:
-				raise ValueError(f'Attribute {attribute} was not expected.')
+			#else:
+				#raise ValueError(f'Attribute {attribute} was not expected.')
 		
 	def write_data(self):
 		self.combined_data.to_csv('./measurement-data/outliers_removed/orem.csv')
