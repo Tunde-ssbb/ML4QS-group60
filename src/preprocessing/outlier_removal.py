@@ -19,8 +19,13 @@ from lib.Chapter3.OutlierDetection import
 class OutlierRemoval():
 	def __init__(self) -> None:
 		self.data_files:str[pd.DataFrame] = {}
+		self.combined_data = pd.DataFrame()
 	
 	def read_data(self):
+		path = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/'))
+		self.combined_data = pd.read_csv()
+
+
 		print(os.getcwd())
 		walk_dir = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/processed/'))
 		print(walk_dir)
