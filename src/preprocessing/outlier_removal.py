@@ -129,24 +129,21 @@ class OutlierRemoval():
 	def _remove_outliers_density_based(self, col):
 		# Calculating LOFs
 		od = DistanceBasedOutlierDetection()
-		od.local_outlier_factor(self.combined_data, [col], 'euclidean', 3)
+		with_lof = od.local_outlier_factor(self.combined_data, [col], 'euclidean', 5)
 
 		# Constants
-		col2 = 'lof'
-		cutoff = 0.9
+		cutoff_low = 0.95
+		cutoff_high = 1.05
 
 		# Removing outliers based on cutoff
-		mask = self.combined_data[col2] <= cutoff
+		mask = with_lof['lof'] >= cutoff_low & with_lof['lof'] <= cutoff_high
 		self.combined_data = self.combined_data[mask]
-		self.combined_data.drop(col2)
-		return
-
 
 	def remove_outliers(self):
 		for attribute in self.combined_data.columns.values:
 			if 'dist' in attribute:
 				self._remove_outliers_density_based(attribute)
-			""" elif 'pace' in attribute:
+			elif 'pace' in attribute:
 				self._remove_outliers_density_based(attribute)
 			elif 'HR' in attribute:
 				self._remove_outliers_density_based(attribute)
@@ -165,7 +162,7 @@ class OutlierRemoval():
 			elif 'arm_acc' in attribute:
 				self._remove_outliers_distribution_based(attribute)
 			else:
-				raise ValueError(f'Attribute {attribute} was not expected.') """
+				raise ValueError(f'Attribute {attribute} was not expected.')
 		
 	def output_data(self):
 		pass
