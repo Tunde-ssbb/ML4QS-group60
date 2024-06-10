@@ -3,6 +3,7 @@ import pandas as pd
 import os
 
 # define these column names for plots to work
+# exp_lvl and session_id only required for the performance plot
 cols = ['time', 'arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z', 'dist', 'pace', 'HR', 'exp_lvl', 'session_id']
 
 # read data and define a name
