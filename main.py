@@ -7,6 +7,7 @@ def do_outlier_removal():
 	orem.read_data()
 	orem.remove_outliers()
 	vis.create_distribution_plot(orem.combined_data, 'orem', './figures/without_outliers')
+	orem.write_data()
 
 def main():
 	do_outlier_removal()
