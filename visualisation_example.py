@@ -1,4 +1,5 @@
 from src.visualisation.data_visualisation import create_movement_plot, create_distribution_plot, create_performance_plot
+from src.preprocessing.interpolate import interpolate
 import pandas as pd
 import os
 
@@ -10,6 +11,12 @@ cols = ['time', 'arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y',
 data_path = "./measurement-data/full_data.csv"
 data = pd.read_csv(data_path, names=cols, header = 0)
 session_name = "full_data"
+
+#interpolate HR values per session_id
+print("nan before", data['HR'].isna().sum())
+data = interpolate(data, 'HR', 'session_id')
+print("nan after", data['HR'].isna().sum())
+
 
 #define folder which to save the plots to 
 path = os.path.abspath("./figures")
