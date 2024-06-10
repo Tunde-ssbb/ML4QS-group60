@@ -1,3 +1,4 @@
+# interpolate the data in column 'col_name', group by column 'group_by_col'
 def interpolate(data, col_name, group_by_col=None):
     print(f" NaN values in {col_name} column: {data[col_name].isna().sum()}")
     if group_by_col == None:
