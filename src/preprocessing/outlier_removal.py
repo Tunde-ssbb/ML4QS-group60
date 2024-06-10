@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 # Internals
 from lib.util.VisualizeDataset import VisualizeDataset as vd
-from lib.Chapter3.OutlierDetection import 
+from lib.Chapter3.OutlierDetection import DistanceBasedOutlierDetection, DistributionBasedOutlierDetection
 
 class OutlierRemoval():
 	def __init__(self) -> None:
@@ -22,11 +22,10 @@ class OutlierRemoval():
 		self.combined_data = pd.DataFrame()
 	
 	def read_data(self):
-		path = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/'))
-		self.combined_data = pd.read_csv()
+		path = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/full_data.csv'))
+		self.combined_data = pd.read_csv(path)
 
-
-		print(os.getcwd())
+		""" print(os.getcwd())
 		walk_dir = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/processed/'))
 		print(walk_dir)
 		for root, subdirs, files in os.walk(walk_dir):
@@ -36,7 +35,7 @@ class OutlierRemoval():
 				with os.scandir(root+'/'+subdir) as it:
 					for entry in it:
 						data = pd.read_csv(entry)
-						self.data_files[subdir+'-'+entry.name] = data
+						self.data_files[subdir+'-'+entry.name] = data """
 	
 	def visualize_data(self, after_removal: bool):
 		for file, data in self.data_files.items():
@@ -121,28 +120,41 @@ class OutlierRemoval():
 			img_file=name+'_'+session+'_performance_'+moment+'.png'
 			plt.savefig("./figures/" + subdir + '/' + img_file)
 
-	def _remove_outliers_distribution_based(self):
+	def _remove_outliers_distribution_based_mixed_models(self, col, k):
 		pass
 
-	def _remove_outliers_density_based(self):
-		
+	def _remove_outliers_distribution_based_chauvenet(self, col):
 		pass
+
+	def _remove_outliers_density_based_LOF(self, col):
+		od = DistanceBasedOutlierDetection()
+		od.local_outlier_factor(self.combined_data, col, 'euclidean', 3)
+		col2 = 'lof'
+		self.combined_data[col] = self.combined_data.apply(lambda x: f(x.col, x.col2), axis=1)
+
 
 	def remove_outliers(self):
-		for file, data in self.data_files:
-			for attribute in data.columns.values:
-				if 'Distance' in attribute:
-					self._remove_outliers_density_based()
-				elif 'Pace' in attribute:
-					self._remove_outliers_distribution_based()
-				elif 'HR' in attribute:
-					self._remove_outliers_density_based()
-				elif '(rad/s)' in attribute:
-					self._remove_outliers_density_based()
-				elif '(m/s^2)' and 'Y' in attribute:
-					self._remove_outliers_density_based()
-				elif '(m/s^2)' in attribute:
-					self._remove_outliers_distribution_based()
-				else:
-					raise ValueError(f'Attribute {attribute} was not expected.')
+		for attribute in self.combined_data.columns.values:
+			if 'dist' in attribute:
+				self._remove_outliers_density_based(attribute)
+			elif 'pace' in attribute:
+				self._remove_outliers_density_based(attribute)
+			elif 'HR' in attribute:
+				self._remove_outliers_density_based(attribute)
+			elif 'leg_gyr' and 'z' in attribute:
+				self._remove_outliers_density_based(attribute)
+			elif 'leg_gyr' in attribute:
+				self._remove_outliers_distribution_based(attribute)
+			elif 'arm_gyr' in attribute:
+				self._remove_outliers_distribution_based(attribute)
+			elif 'leg_acc' and 'x' in attribute:
+				self._remove_outliers_distribution_based(attribute)
+			elif 'leg_acc' and 'y' in attribute:
+				self._remove_outliers_density_based(attribute)
+			elif 'leg_acc' and 'z' in attribute:
+				self._remove_outliers_distribution_based(attribute)
+			elif 'arm_acc' in attribute:
+				self._remove_outliers_distribution_based(attribute)
+			else:
+				raise ValueError(f'Attribute {attribute} was not expected.')
 		
