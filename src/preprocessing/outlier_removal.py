@@ -27,12 +27,11 @@ class OutlierRemoval():
 		mean = with_mixture[col+'_mixture'].mean()
 		print(with_mixture[col+'_mixture'].std())
 		print(with_mixture[col+'_mixture'].mean())
-		cutoff_high = mean + 2 * std
-		cutoff_low = mean - 2 * std
+		cutoff_low = mean - 1.3 * std
 
 		# Removing outliers
 		# TODO: I do not fully understand what the values returnt mean
-		with_mixture[col].mask((with_mixture[col+'_mixture'] <= cutoff_low) | (with_mixture[col+'_mixture'] >= cutoff_high), inplace=True)
+		with_mixture[col].mask(with_mixture[col+'_mixture'] <= cutoff_low, inplace=True)
 		self.outlier_visualization(col+'_mixture', with_mixture)
 		
 		self.combined_data = with_mixture.drop(col+'_mixture', axis=1)
@@ -66,9 +65,9 @@ class OutlierRemoval():
 			if 'dist' in attribute or 'pace' in attribute or '0' in attribute or 'time' in attribute or 'experience_level' in attribute or 'session_id' in attribute:
 				continue
 			elif 'HR' in attribute:
-				self._remove_outliers_density_based(attribute)
+				self._remove_outliers_distribution_based_mixed_models(attribute, 3)
 			elif 'leg_gyr' in attribute and 'z' in attribute:
-				self._remove_outliers_density_based(attribute)
+				self._remove_outliers_distribution_based_mixed_models(attribute, 3)
 			elif 'leg_gyr' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute, 2)
 			elif 'arm_gyr' in attribute:
@@ -76,7 +75,7 @@ class OutlierRemoval():
 			elif 'leg_acc' in attribute and 'x' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute, 1)
 			elif 'leg_acc' in attribute and 'y' in attribute:
-				self._remove_outliers_density_based(attribute)
+				self._remove_outliers_distribution_based_mixed_models(attribute,3)
 			elif 'leg_acc' in attribute and 'z' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute, 2)
 			elif 'arm_acc' in attribute and 'x' in attribute:
