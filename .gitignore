@@ -9,3 +9,4 @@ site-packages
 
 #lib/
 __pycache__/
+.pyc
