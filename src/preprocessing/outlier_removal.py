@@ -32,7 +32,7 @@ class OutlierRemoval():
 		# Removing outliers
 		# TODO: I do not fully understand what the values returnt mean
 		with_mixture[col].mask(with_mixture[col+'_mixture'] <= cutoff_low, inplace=True)
-		self.outlier_visualization(col+'_mixture', with_mixture)
+		self.outlier_visualization(col, col+'_mixture', with_mixture)
 		
 		self.combined_data = with_mixture.drop(col+'_mixture', axis=1)
 		print(f'#NaNs: {self.combined_data.isna().sum()}')
@@ -53,7 +53,7 @@ class OutlierRemoval():
 		
 		# Removing outliers based on cutoff
 		with_lof[col].mask((with_lof['lof'] <= cutoff_low) | (with_lof['lof'] >= cutoff_high), inplace=True)
-		self.outlier_visualization('lof')
+		self.outlier_visualization(col, 'lof')
 		
 		self.combined_data = with_lof.drop('lof', axis=1)
 		print(f'#NaNs: {self.combined_data.isna().sum()}')
@@ -88,7 +88,7 @@ class OutlierRemoval():
 	def write_data(self):
 		self.combined_data.to_csv('./measurement-data/outliers_removed/orem.csv')
 
-	def outlier_visualization(self, col, data, path='./figures/without_outliers'):
+	def outlier_visualization(self, og_col, col, data, path='./figures/without_outliers'):
 		# Create subplots
 		fig, axs = plt.subplots(figsize=(16, 16), squeeze=False)
 
@@ -106,3 +106,25 @@ class OutlierRemoval():
 		plt.savefig(p)
 
 		print(f"Saved distribution plot to: {p}")
+
+		# Create subplots
+		fig, axs = plt.subplots(figsize=(12, 16), squeeze=False)
+
+		axs[0,0].plot(data[og_col], data[col], "r+", label='x')
+		axs[0,0].set_ylabel(f'{col} vals')
+		axs[0,0].legend(loc = 'upper left')
+
+		# Set common x-label
+		axs[0,0].set_xlabel(f"{og_col} vals")
+
+		# Set x-ticks only for the lowest subplot
+		for ax in axs[:-1]:
+			ax.tick_params(labelbottom=False)
+
+		# Format the x-ticks as integers representing minutes
+		axs[0,0].set_xticks(np.arange(data[og_col].min(), data[og_col].max()))
+
+		p = path + "/" +  col + "_performance"
+		plt.savefig(p)
+
+		print(f"Saved performance plot to: {p}")
