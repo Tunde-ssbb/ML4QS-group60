@@ -27,11 +27,12 @@ class OutlierRemoval():
 		mean = with_mixture[col+'_mixture'].mean()
 		print(with_mixture[col+'_mixture'].std())
 		print(with_mixture[col+'_mixture'].mean())
-		cutoff = mean - 1.5 * std
+		cutoff_high = mean + 2 * std
+		cutoff_low = mean - 2 * std
 
 		# Removing outliers
 		# TODO: I do not fully understand what the values returnt mean
-		with_mixture[col].mask(with_mixture[col+'_mixture'] <= cutoff, inplace=True)
+		with_mixture[col].mask((with_mixture[col+'_mixture'] <= cutoff_low) | (with_mixture[col+'_mixture'] >= cutoff_high), inplace=True)
 		self.outlier_visualization(col+'_mixture', with_mixture)
 		
 		self.combined_data = with_mixture.drop(col+'_mixture', axis=1)
@@ -96,8 +97,8 @@ class OutlierRemoval():
 
 		# First plot: arm acceleration
 		axs[0,0].set_title(col, size = 20)
-		axs[0,0].hist(data[col], bins = 100, alpha = 0.5, label=col[0])
-		axs[0,0].set_xlabel("outlier method", fontsize=20)
+		axs[0,0].hist(data[col], bins = 500, alpha = 0.5, label=col[0])
+		axs[0,0].set_xlabel("outlier method results", fontsize=20)
 		axs[0,0].set_ylabel("frequency", fontsize=20)
 		axs[0,0].tick_params(labelsize=16)
 		axs[0,0].legend(loc = 'upper left', fontsize = 20)
