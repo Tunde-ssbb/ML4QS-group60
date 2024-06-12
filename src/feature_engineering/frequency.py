@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from lib.Chapter4.FrequencyAbstraction import FourierTransformation
 from src.preprocessing.interpolate import interpolate
+import re
 
 
 def fourier_per_session(data, window_size, sampling_rate = 10):
@@ -34,13 +35,38 @@ def fourier_per_session(data, window_size, sampling_rate = 10):
     return full_data_fouried
 
 
-#run this to create the fouried dataset
-"""
+def remove_frequencies(data, max_freq, min_freq = 0):
+    columns_to_drop = []
+    for col in data.columns:
+        freq = extract_frequency(col)
+        if freq == None:
+            continue
+        elif freq < min_freq or freq > max_freq:
+            columns_to_drop.append(col)
 
+    return data.drop(columns = columns_to_drop)        
+
+
+
+
+def extract_frequency(input_string):
+    # Define the regex pattern to extract the frequency
+    pattern = r'freq_([0-9]*\.?[0-9]+)_Hz'
+    match = re.search(pattern, input_string)
+    
+    if match:
+        # Convert the extracted value to float and return
+        return float(match.group(1))
+    else:
+        return None
+
+#run this to create the fouried dataset
+
+"""
 cols = ['time', 'arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z', 'dist', 'pace', 'HR', 'exp_lvl', 'session_id']
 
 # read data and define a name
-data_path = "./measurement-data/full_data.csv"
+data_path = "./measurement-data/nans_removed/imp.csv"
 data = pd.read_csv(data_path, names=cols, header = 0)
 session_name = "full_data"
 
