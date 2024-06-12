@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from src.feature_engineering.frequency import extract_frequency
 
 
 def create_movement_plot(data, name_session, path):
@@ -168,3 +169,40 @@ def create_distribution_plot(data, session_name, path):
 
     # Show plot
     #plt.show()
+
+def create_temporal_frequency_plot(data, feature, path):
+
+    data['time_numeric'] = pd.to_datetime(data['time']).view(np.int64) // 10**6
+
+    # Extract columns that start with the feature name
+    feature_columns = [col for col in data.columns if col.startswith(feature)]
+    
+    # Extract frequencies from the column names
+    frequencies = []
+    for col in feature_columns:
+        freq = extract_frequency(col)
+        if freq != None and freq != 0.0:
+            frequencies.append(freq)
+        else:
+            frequencies.append(np.nan)
+    
+    # Create the scatter plot
+    plt.figure(figsize=(10, 6))
+    
+    for col, freq in zip(feature_columns, frequencies):
+        if not np.isnan(freq):
+            plt.scatter([freq] * len(data), data[col], c=data['time_numeric'], cmap='viridis', label=f'{col}', alpha=0.5)
+    
+    plt.colorbar(label='Time')
+    plt.xlabel('Frequency (Hz)')
+    plt.ylabel('Values')
+    plt.title(f'Scatter plot of {feature} values by frequency')
+    
+    p = path + "/" +  feature + "_temporal_frequencies"
+    plt.savefig(p)
+
+    print(f"Saved frequency plot to: {p}")
+
+
+
+
