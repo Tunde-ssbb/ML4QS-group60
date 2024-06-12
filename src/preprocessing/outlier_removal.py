@@ -12,8 +12,7 @@ class OutlierRemoval():
 	def __init__(self) -> None:
 		self.combined_data = pd.DataFrame()
 	
-	def read_data(self):
-		path = os.path.abspath(os.path.join(os.getcwd(), 'measurement-data/full_data.csv'))
+	def read_data(self, path):
 		self.combined_data = pd.read_csv(path)
 
 	def _remove_outliers_distribution_based_mixed_models(self, col, n_components):
@@ -58,7 +57,7 @@ class OutlierRemoval():
 		print(self.combined_data.shape[0])
 		for attribute in self.combined_data.columns.values:
 			print(attribute)
-			if 'dist' in attribute or 'pace' in attribute or '0' in attribute or 'time' in attribute or 'experience_level' in attribute or 'session_id' in attribute:
+			if 'dist' in attribute or 'pace' in attribute or '0' in attribute or 'time' in attribute or 'exp_lvl' in attribute or 'session_id' in attribute:
 				continue
 			elif 'HR' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute, 3)
@@ -81,8 +80,8 @@ class OutlierRemoval():
 			else:
 				raise ValueError(f'Attribute {attribute} was not expected.')
 		
-	def write_data(self):
-		self.combined_data.to_csv('./measurement-data/outliers_removed/orem.csv')
+	def write_data(self, path):
+		self.combined_data.to_csv(path)
 
 	def outlier_visualization(self, og_col, col, data, path='./figures/without_outliers'):
 		# Create subplots

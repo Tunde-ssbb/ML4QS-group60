@@ -8,5 +8,6 @@ def interpolate(data, col_names, group_by_col=None):
                 data[col] = data[col].interpolate()
             else:
                 data[col] = data.groupby(group_by_col)[col].apply(lambda group: group.interpolate())
+        print(f" NaN values in {col} column: {data[col].isna().sum()}")
 
     return data
