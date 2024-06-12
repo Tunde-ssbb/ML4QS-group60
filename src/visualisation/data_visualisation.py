@@ -15,6 +15,16 @@ def create_movement_plot(data, name_session, path):
     axs[0].set_ylabel("arm acceleration (m/s^2)")
     axs[0].legend(loc = 'upper left')
 
+    #exchange 'exp_level' for what you want to color by
+    """
+    axs[0].set_title(name_session)
+    axs[0].scatter(data['time'], data['arm_acc_x'], c=data['exp_lvl'], cmap = "viridis", label='x')
+    axs[0].scatter(data['time'], data['arm_acc_y'], c=data['exp_lvl'], cmap = "viridis", label='y')
+    axs[0].scatter(data['time'], data['arm_acc_z'], c=data['exp_lvl'], cmap = "viridis", label='z')
+    axs[0].set_ylabel("arm acceleration (m/s^2)")
+    axs[0].legend(loc = 'upper left')
+    """
+
     # Second plot: arm rotation
     axs[1].plot(data['time'], data['arm_gyr_x'], "r+", label='x')
     axs[1].plot(data['time'], data['arm_gyr_y'], "b+", label='y')
