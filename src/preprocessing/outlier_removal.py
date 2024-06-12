@@ -23,15 +23,11 @@ class OutlierRemoval():
 		with_mixture = mm.mixture_model(self.combined_data, col, n_components)
 
 		# Constants
-		std = with_mixture[col+'_mixture'].std()
-		mean = with_mixture[col+'_mixture'].mean()
-		print(with_mixture[col+'_mixture'].std())
-		print(with_mixture[col+'_mixture'].mean())
-		cutoff_low = mean - 1.3 * std
+		outlier_portion = int(with_mixture[col+'_mixture'].shape[0] / 200)
+		cutoff = with_mixture[col+'_mixture'].nsmallest(outlier_portion).max()
 
 		# Removing outliers
-		# TODO: I do not fully understand what the values returnt mean
-		with_mixture[col].mask(with_mixture[col+'_mixture'] <= cutoff_low, inplace=True)
+		with_mixture[col].mask(with_mixture[col+'_mixture'] <= cutoff, inplace=True)
 		self.outlier_visualization(col, col+'_mixture', with_mixture)
 		
 		self.combined_data = with_mixture.drop(col+'_mixture', axis=1)
