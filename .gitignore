@@ -10,3 +10,7 @@ site-packages
 #lib/
 __pycache__/
 .pyc
+
+#large data files
+src/machine_learning/fouried_data.csv
+measurement-data/with_features/fouried_data.csv
