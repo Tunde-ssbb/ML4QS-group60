@@ -35,11 +35,11 @@ def fourier_per_session(data, window_size, sampling_rate = 10):
     return full_data_fouried
 
 
-def remove_frequencies(data, max_freq, min_freq = 0):
+def remove_frequencies(data, max_freq, min_freq = 0, except_freq=None):
     columns_to_drop = []
     for col in data.columns:
         freq = extract_frequency(col)
-        if freq == None:
+        if freq == None or (except_freq != None and freq in except_freq):
             continue
         elif freq < min_freq or freq > max_freq:
             columns_to_drop.append(col)

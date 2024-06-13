@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from src.feature_engineering.frequency import extract_frequency
+import seaborn as sns
+from matplotlib.lines import Line2D
 
 
 def create_movement_plot(data, name_session, path):
@@ -204,5 +206,58 @@ def create_temporal_frequency_plot(data, feature, path):
     print(f"Saved frequency plot to: {p}")
 
 
+def create_freq_distributions_by_experience_level_plot(data, feature_prefix, path):
+    #Extract columns that start with the feature prefix
+    feature_columns = [col for col in data.columns if col.startswith(feature_prefix)]
+    
+    if not feature_columns:
+        print("No columns found with the given feature prefix.")
+        return
+    
+    #print(f"Feature columns: {feature_columns}")
 
+    # Get unique experience levels
+    exp_levels = data['exp_lvl'].unique()
+    
+    # Number of subplots (at most 5)
+    num_subplots = min(len(exp_levels), 5)
+    
+    # Create subplots
+    fig, axes = plt.subplots(num_subplots, 1, figsize=(12, 8 * num_subplots), sharex=True)
+    if num_subplots == 1:
+        axes = [axes]  # Ensure axes is iterable
 
+    all_handles_labels = {}
+
+    for ax, exp_lvl in zip(axes, exp_levels):
+        # Filter the dataframe for the current experience level
+        exp_data = data[data['exp_lvl'] == exp_lvl]
+        
+        for col in feature_columns:
+            # Extract the frequency from the column name
+            freq = extract_frequency(col)
+            if freq != None:
+                sns.kdeplot(exp_data[col], ax=ax, label=f'Freq {freq} Hz', fill=True)
+                if f'Freq {freq} Hz' not in all_handles_labels:
+                    all_handles_labels[f'Freq {freq} Hz'] = Line2D([0], [0], color=sns.color_palette()[len(all_handles_labels) % len(sns.color_palette())])
+
+        ax.set_title(f'Distribution of {feature_prefix} values for Experience Level {exp_lvl}')
+        ax.set_xlabel('Value')
+        ax.set_ylabel('Density')
+        ax.legend()
+    
+    if not all_handles_labels:
+        print("No valid KDE plots were created.")
+        return
+
+    # Create a single legend outside the subplots
+    #handles, labels = zip(*all_handles_labels.items())
+    #fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=5, title='Frequency')
+    
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.9)  # Adjust to fit the legend
+
+    p = path + "/" +  feature_prefix + "_freq_dist_per_lvl"
+    plt.savefig(p)
+
+    print(f"Saved distribution plot to: {p}")

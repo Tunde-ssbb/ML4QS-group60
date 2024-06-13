@@ -34,3 +34,12 @@ def calculate_weighted_average(data, windowsize, column_names, weights=None):
         )
     
     return data
+
+def calculate_window_std(data, windowsize, col_names):
+
+    for col in col_names:
+        # Compute the rolling standard deviation
+        rolling_std_col = f'{col}_std'
+        data[rolling_std_col] = data[col].rolling(window=windowsize).std()
+    
+    return data
