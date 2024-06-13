@@ -119,8 +119,8 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
 
 # If you want to see which features were selected:
-selected_features_kbest = X_train.columns.values[pipeline.named_steps['select_k_best'].get_support()]
-selected_features_sfs = X_train.columns[pipeline.named_steps['sfs'].get_support()]
+selected_features_kbest = X_train.columns.values[pipeline.named_steps.base.steps[1][1].get_support()]
 print('Selected features by SelectKBest:', selected_features_kbest)
+selected_features_sfs = selected_features_kbest[pipeline.named_steps.base.steps[2][1].get_support()]
 print('Selected features by SequentialFeatureSelector:', selected_features_sfs)
 
