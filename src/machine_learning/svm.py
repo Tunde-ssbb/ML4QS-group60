@@ -82,7 +82,7 @@ target = 'exp_lvl'
 X = data.drop(columns=target)
 y = data[target]
 
-X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, 0.2)
+X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, 2)
 
 print(X_test)
 print(y_test)
@@ -92,7 +92,7 @@ print(y_test)
 svc = LinearSVC(verbose=1, max_iter=1000, C=10)
 rfc = RandomForestClassifier(n_estimators=100, max_depth=10, verbose = 1)
 
-model = rfc
+model = svc 
 
 
 # Set up the pipeline with StandardScaler and SequentialFeatureSelector
@@ -119,8 +119,8 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
 
 # If you want to see which features were selected:
-selected_features_kbest = X_train.columns[pipeline.named_steps['select_k_best'].get_support()]
-selected_features_sfs = X_train.columns[pipeline.named_steps['sfs'].get_support()]
+selected_features_kbest = X_train.columns.values[pipeline.named_steps.base.steps[1][1].get_support()]
 print('Selected features by SelectKBest:', selected_features_kbest)
+selected_features_sfs = selected_features_kbest[pipeline.named_steps.base.steps[2][1].get_support()]
 print('Selected features by SequentialFeatureSelector:', selected_features_sfs)
 

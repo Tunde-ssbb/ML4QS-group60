@@ -8,23 +8,26 @@ import os
 
 
 # read data and define a name
-data_path = "./measurement-data/full_data.csv"
+data_path = "./smaller_data.csv"
 data = pd.read_csv(data_path, index_col=0)
 
+path = os.path.abspath("./figures/freq_dist_per_lvl")
 
-data = fe.feature_engineer(data)
+features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
 
-print(data.columns)
-print(data.shape)
+for feature in features:
+    dv.create_freq_distributions_by_experience_level_plot(data, feature, path)
 
-data.to_csv("fe_data.csv")
+
+#data = fe.feature_engineer(data)
+
+#print(data.columns)
+#print(data.shape)
+
+#data.to_csv("fe_data.csv")
 
 """
 
-interpolate HR values per session_id
-print("nan before", data['HR'].isna().sum())
-data = interpolate(data, ['HR', 'pace', 'dist'], 'session_id')
-print("nan after", data['HR'].isna().sum())
 
 features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
 
