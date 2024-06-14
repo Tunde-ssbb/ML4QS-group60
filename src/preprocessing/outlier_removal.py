@@ -81,7 +81,7 @@ class OutlierRemoval():
 				raise ValueError(f'Attribute {attribute} was not expected.')
 		
 	def write_data(self, path):
-		self.combined_data.to_csv(path)
+		self.combined_data.to_csv(path, index=False) 
 
 	def outlier_visualization(self, og_col, col, data, path='./figures/without_outliers'):
 		# Create subplots
