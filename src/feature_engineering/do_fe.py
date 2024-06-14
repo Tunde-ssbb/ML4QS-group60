@@ -16,6 +16,8 @@ features:
 def feature_engineer(data):
     features = list(data.columns)
     features.remove("time")
+    features.remove("exp_lvl")
+
 
     data = ffe.fourier_per_session(data, 100)
 
