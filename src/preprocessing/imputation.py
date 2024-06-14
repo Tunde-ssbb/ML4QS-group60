@@ -8,7 +8,7 @@ class Imputation():
 		self.data = pd.DataFrame()
 	
 	def read_data(self, path):
-		self.data = pd.read_csv(path, index='Unnamed: 0')
+		self.data = pd.read_csv(path, index_col='Unnamed: 0')
 	
 	def apply_imputation(self):
 		self.data = interpolate(self.data, self.data.columns.values)
