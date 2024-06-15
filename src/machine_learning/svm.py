@@ -98,7 +98,7 @@ start = time.time()
 
 
 # Set up the SVC classifier
-svc = LinearSVC(verbose=0, C=100, max_iter=500, dual=0)
+svc = LinearSVC(verbose=0, C=100, max_iter=1000, dual=False)
 rfc = RandomForestClassifier(n_estimators=100, max_depth=10, verbose = 1)
 
 model = svc 
@@ -120,7 +120,7 @@ pipeline = Pipeline([
 # Setting up grid search
 print(pipeline.get_params().keys())
 param_grid = {'svc__estimator__C':[10,100,1000],'svc__estimator__max_iter':[500, 1000]}
-grid = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1, scoring='accuracy')
+grid = GridSearchCV(pipeline, param_grid, cv=5, scoring='accuracy')
 
 
 # Fit the pipeline to the training data
