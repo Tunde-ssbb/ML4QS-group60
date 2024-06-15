@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.model_selection import GridSearchCV
 import time
 
 
@@ -95,8 +96,9 @@ print(f"exp lvl: {y_test.mean()}")
 
 start = time.time()
 
+
 # Set up the SVC classifier
-svc = LinearSVC(verbose=0, max_iter=1000, C=100, dual=0)
+svc = LinearSVC(verbose=0, C=100, max_iter=500, dual=0)
 rfc = RandomForestClassifier(n_estimators=100, max_depth=10, verbose = 1)
 
 model = svc 
@@ -115,11 +117,19 @@ pipeline = Pipeline([
     ('svc', OneVsRestClassifier(model))
 ])
 
+# Setting up grid search
+print(pipeline.get_params().keys())
+param_grid = {'svc__estimator__C':[10,100,1000],'svc__estimator__max_iter':[500, 1000]}
+grid = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1, scoring='accuracy')
+
+
 # Fit the pipeline to the training data
-pipeline.fit(X_train, y_train)
+grid.fit(X_train, y_train)
+print("Best parameter (CV score=%0.3f):" % grid.best_score_)
+print(grid.best_params_)
 
 # Make predictions on the test data
-y_pred = pipeline.predict(X_test)
+y_pred = grid.predict(X_test)
 
 # Evaluate the model
 for i in range(5):
