@@ -9,6 +9,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.model_selection import GridSearchCV
+import time
 
 
 # define a custum train test split to preserve temporality of data
@@ -64,7 +66,7 @@ def train_test_split_full_session(X, y, test_session_id):
 
 columns_to_drop = ['dist' , 'pace']
 
-data = pd.read_csv("./fouried_data.csv")
+data = pd.read_csv("./src/machine_learning/fouried_data.csv", index_col=0)
 
 data = data.drop(columns = columns_to_drop)
 
@@ -82,14 +84,21 @@ target = 'exp_lvl'
 X = data.drop(columns=target)
 y = data[target]
 
-X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, 2)
+session_id = 2
+X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
 
 print(X_test)
 print(y_test)
 
+print(f"test set session id: {session_id}")
+print(f"exp lvl: {y_test.mean()}")
+
+
+start = time.time()
+
 
 # Set up the SVC classifier
-svc = LinearSVC(verbose=1, max_iter=1000, C=10)
+svc = LinearSVC(verbose=0, C=100, max_iter=500, dual=0)
 rfc = RandomForestClassifier(n_estimators=100, max_depth=10, verbose = 1)
 
 model = svc 
@@ -108,13 +117,24 @@ pipeline = Pipeline([
     ('svc', OneVsRestClassifier(model))
 ])
 
+# Setting up grid search
+print(pipeline.get_params().keys())
+param_grid = {'svc__estimator__C':[10,100,1000],'svc__estimator__max_iter':[500, 1000]}
+grid = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1, scoring='accuracy')
+
+
 # Fit the pipeline to the training data
-pipeline.fit(X_train, y_train)
+grid.fit(X_train, y_train)
+print("Best parameter (CV score=%0.3f):" % grid.best_score_)
+print(grid.best_params_)
 
 # Make predictions on the test data
-y_pred = pipeline.predict(X_test)
+y_pred = grid.predict(X_test)
 
 # Evaluate the model
+for i in range(5):
+    print(f"count {i}: {(y_pred == i).sum()}")
+
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
 
@@ -124,3 +144,6 @@ print('Selected features by SelectKBest:', selected_features_kbest)
 selected_features_sfs = selected_features_kbest[pipeline.named_steps.base.steps[2][1].get_support()]
 print('Selected features by SequentialFeatureSelector:', selected_features_sfs)
 
+end = time.time()
+
+print(f"time: {end-start}s")

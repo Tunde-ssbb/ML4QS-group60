@@ -236,7 +236,7 @@ def create_freq_distributions_by_experience_level_plot(data, feature_prefix, pat
         for col in feature_columns:
             # Extract the frequency from the column name
             freq = extract_frequency(col)
-            if freq != None:
+            if freq != None and freq != 0.0:
                 sns.kdeplot(exp_data[col], ax=ax, label=f'Freq {freq} Hz', fill=True)
                 if f'Freq {freq} Hz' not in all_handles_labels:
                     all_handles_labels[f'Freq {freq} Hz'] = Line2D([0], [0], color=sns.color_palette()[len(all_handles_labels) % len(sns.color_palette())])

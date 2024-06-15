@@ -58,10 +58,15 @@ import src.feature_engineering.domain as dfe
 def feature_engineer(data):
     features = list(data.columns)
     features.remove("time")
+    features.remove("exp_lvl")
+    features.remove("dist")
+    features.remove("pace")
+
 
     data = ffe.fourier_per_session(data, 100)
 
-    data = ffe.remove_frequencies(data, 0, except_freq=[0.2,0.3,0.4,0.6,0.8,0.9])
+    data = ffe.remove_frequencies(data, 2, except_freq=[0.2,0.3,0.4,0.6,0.8,0.9])
+
 
     data = tfe.calculate_window_difference(data, 3, features)
     data = tfe.calculate_window_std(data, 40, features)

@@ -57,7 +57,7 @@ class OutlierRemoval():
 		print(self.combined_data.shape[0])
 		for attribute in self.combined_data.columns.values:
 			print(attribute)
-			if 'dist' in attribute or 'pace' in attribute or '0' in attribute or 'time' in attribute or 'experience_level' in attribute or 'session_id' in attribute:
+			if 'dist' in attribute or 'pace' in attribute or '0' in attribute or 'time' in attribute or 'exp_lvl' in attribute or 'session_id' in attribute:
 				continue
 			elif 'HR' in attribute:
 				self._remove_outliers_distribution_based_mixed_models(attribute, 3)
