@@ -66,7 +66,7 @@ def train_test_split_full_session(X, y, test_session_id):
 
 columns_to_drop = ['dist' , 'pace']
 
-data = pd.read_csv("./src/machine_learning/fouried_data.csv", index_col=0)
+data = pd.read_csv("./src/machine_learning/fouried_data.csv")
 
 data = data.drop(columns = columns_to_drop)
 
@@ -84,7 +84,10 @@ target = 'exp_lvl'
 X = data.drop(columns=target)
 y = data[target]
 
-session_id = 2
+session_id = 23
+"""
+    session id 1 -> 1000, 1000 with 100% accuracy
+"""
 X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
 
 print(X_test)
@@ -119,17 +122,18 @@ pipeline = Pipeline([
 
 # Setting up grid search
 print(pipeline.get_params().keys())
-param_grid = {'svc__estimator__C':[10,100,1000],'svc__estimator__max_iter':[500, 1000]}
-grid = GridSearchCV(pipeline, param_grid, cv=5, scoring='accuracy')
+#param_grid = {'base__sfs__estimator__C': [10, 100, 1000], 'base__sfs__estimator__max_iter': [500, 1000]}
+#grid = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1,scoring='accuracy')
 
 
 # Fit the pipeline to the training data
-grid.fit(X_train, y_train)
-print("Best parameter (CV score=%0.3f):" % grid.best_score_)
-print(grid.best_params_)
+pipeline.fit(X_train, y_train)
+#print("Best parameter (CV score=%0.3f):" % grid.best_score_)
+#print(grid.best_params_)
+#print(f'Total results: {grid.cv_results_}')
 
 # Make predictions on the test data
-y_pred = grid.predict(X_test)
+y_pred = pipeline.predict(X_test)
 
 # Evaluate the model
 for i in range(5):
@@ -137,6 +141,9 @@ for i in range(5):
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
+
+#print(grid)
+print(pipeline)
 
 # If you want to see which features were selected:
 selected_features_kbest = X_train.columns.values[pipeline.named_steps.base.steps[1][1].get_support()]
