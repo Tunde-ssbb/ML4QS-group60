@@ -11,7 +11,6 @@ top 25 features for session 23
  'leg_gyr_y_freq_weighted' 'leg_gyr_z_freq_weighted'
  'leg_acc_y_freq_weighted'
 
-
  Selected features by SelectKBest: ['Unnamed: 0' 'Unnamed: 0.1' 'Unnamed: 0.1.1' 'arm_gyr_x' 'arm_gyr_y'
  'arm_gyr_z' 'arm_acc_x' 'arm_acc_y' 'arm_acc_z' 'leg_gyr_x' 'leg_gyr_y'
  'leg_gyr_z' 'leg_acc_x' 'leg_acc_y' 'leg_acc_z' 'HR' 'session_id'
@@ -412,3 +411,103 @@ Selected features by SequentialFeatureSelector: ['time' 'arm_gyr_z' 'arm_acc_z' 
  'session_id_diff' 'arm_gyr_z_std' 'leg_gyr_y_std' 'leg_gyr_z_std'
  'acc_x_derivative_diff' 'acc_z_derivative_diff']
 time: 670.6885778903961s
+
+--------------------------------------------------------------------------------------------------------------
+svc = LinearSVC(verbose=0, max_iter=1000, C=100, dual=0)
+
+exp_lvl: 3
+count 0: 1
+count 1: 2898
+count 2: 2
+count 3: 100
+count 4: 0
+Accuracy: 0.97
+Selected features by SelectKBest: ['time' 'arm_gyr_x' 'arm_gyr_y' 'arm_gyr_z' 'arm_acc_x' 'arm_acc_y'
+ 'arm_acc_z' 'leg_gyr_x' 'leg_gyr_y' 'leg_gyr_z' 'leg_acc_x' 'leg_acc_y'
+ 'leg_acc_z' 'HR' 'session_id' 'arm_gyr_x_max_freq'
+ 'arm_gyr_x_freq_weighted' 'arm_gyr_x_pse' 'arm_gyr_x_freq_0.0_Hz_ws_100'
+ 'arm_gyr_y_max_freq' 'arm_gyr_y_freq_weighted' 'arm_gyr_y_pse'
+ 'arm_gyr_y_freq_0.0_Hz_ws_100' 'arm_gyr_z_max_freq'
+ 'arm_gyr_z_freq_weighted' 'arm_gyr_z_pse' 'arm_gyr_z_freq_0.0_Hz_ws_100'
+ 'arm_acc_x_max_freq' 'arm_acc_x_freq_weighted' 'arm_acc_x_pse'
+ 'arm_acc_x_freq_0.0_Hz_ws_100' 'arm_acc_x_freq_0.1_Hz_ws_100'
+ 'arm_acc_y_max_freq' 'arm_acc_y_freq_weighted'
+ 'arm_acc_y_freq_0.0_Hz_ws_100' 'arm_acc_y_freq_0.1_Hz_ws_100'
+ 'arm_acc_z_max_freq' 'arm_acc_z_freq_weighted' 'arm_acc_z_pse'
+ 'arm_acc_z_freq_0.0_Hz_ws_100' 'arm_acc_z_freq_0.1_Hz_ws_100'
+ 'leg_gyr_x_max_freq' 'leg_gyr_x_freq_weighted' 'leg_gyr_x_pse'
+ 'leg_gyr_x_freq_0.0_Hz_ws_100' 'leg_gyr_x_freq_0.1_Hz_ws_100'
+ 'leg_gyr_y_max_freq' 'leg_gyr_y_freq_weighted' 'leg_gyr_y_pse'
+ 'leg_gyr_y_freq_0.0_Hz_ws_100' 'leg_gyr_y_freq_0.1_Hz_ws_100'
+ 'leg_gyr_y_freq_0.2_Hz_ws_100' 'leg_gyr_z_max_freq' 'leg_gyr_z_pse'
+ 'leg_gyr_z_freq_0.0_Hz_ws_100' 'leg_gyr_z_freq_0.1_Hz_ws_100'
+ 'leg_gyr_z_freq_0.2_Hz_ws_100' 'leg_acc_x_max_freq'
+ 'leg_acc_x_freq_weighted' 'leg_acc_x_pse' 'leg_acc_x_freq_0.0_Hz_ws_100'
+ 'leg_acc_x_freq_0.1_Hz_ws_100' 'leg_acc_y_max_freq'
+ 'leg_acc_y_freq_weighted' 'leg_acc_y_pse' 'leg_acc_y_freq_0.0_Hz_ws_100'
+ 'leg_acc_y_freq_0.1_Hz_ws_100' 'leg_acc_z_max_freq'
+ 'leg_acc_z_freq_weighted' 'leg_acc_z_pse' 'leg_acc_z_freq_0.0_Hz_ws_100'
+ 'leg_acc_z_freq_0.1_Hz_ws_100' 'leg_acc_z_freq_0.2_Hz_ws_100' 'HR_diff'
+ 'session_id_diff' 'arm_gyr_x_std' 'arm_gyr_y_std' 'arm_gyr_z_std'
+ 'arm_acc_x_std' 'arm_acc_y_std' 'arm_acc_z_std' 'leg_gyr_x_std'
+ 'leg_gyr_y_std' 'leg_gyr_z_std' 'leg_acc_x_std' 'leg_acc_y_std'
+ 'leg_acc_z_std' 'HR_std' 'session_id_std' 'leg_acc_y_minmax_diff'
+ 'arm_rot_abs' 'leg_rot_abs' 'arm_leg_max_diff' 'arm_leg_max_time_diff'
+ 'relative_rec' 'norm_leg_acc_rec' 'norm_leg_acc_push'
+ 'acc_x_derivative_diff' 'acc_y_derivative_diff' 'acc_z_derivative_diff']
+Selected features by SequentialFeatureSelector: ['time' 'arm_gyr_z' 'leg_gyr_y' 'leg_acc_y' 'session_id'
+ 'arm_gyr_x_freq_weighted' 'arm_gyr_y_freq_weighted'
+ 'arm_gyr_z_freq_weighted' 'arm_acc_x_freq_weighted'
+ 'arm_acc_x_freq_0.0_Hz_ws_100' 'arm_acc_y_freq_0.1_Hz_ws_100'
+ 'arm_acc_z_freq_weighted' 'leg_gyr_x_freq_weighted'
+ 'leg_gyr_y_freq_weighted' 'leg_gyr_y_freq_0.2_Hz_ws_100'
+ 'leg_acc_y_freq_weighted' 'leg_acc_y_freq_0.0_Hz_ws_100'
+ 'leg_acc_z_freq_weighted' 'HR_diff' 'arm_gyr_y_std' 'arm_gyr_z_std'
+ 'arm_acc_z_std' 'leg_acc_x_std' 'HR_std' 'relative_rec']
+
+--------------------------------------------------------------------------------------------------------------
+svc = LinearSVC(verbose=0, C=100, max_iter=1000, dual=False)
+
+Accuracy: 0.79
+Selected features by SelectKBest: ['time' 'arm_gyr_x' 'arm_gyr_y' 'arm_gyr_z' 'arm_acc_x' 'arm_acc_y'
+ 'arm_acc_z' 'leg_gyr_x' 'leg_gyr_y' 'leg_acc_x' 'leg_acc_y' 'leg_acc_z'
+ 'HR' 'session_id' 'arm_gyr_x_max_freq' 'arm_gyr_x_freq_weighted'
+ 'arm_gyr_x_pse' 'arm_gyr_x_freq_0.0_Hz_ws_100' 'arm_gyr_y_max_freq'
+ 'arm_gyr_y_freq_weighted' 'arm_gyr_y_pse' 'arm_gyr_y_freq_0.0_Hz_ws_100'
+ 'arm_gyr_y_freq_0.1_Hz_ws_100' 'arm_gyr_z_max_freq'
+ 'arm_gyr_z_freq_weighted' 'arm_gyr_z_pse' 'arm_gyr_z_freq_0.0_Hz_ws_100'
+ 'arm_acc_x_max_freq' 'arm_acc_x_freq_weighted' 'arm_acc_x_pse'
+ 'arm_acc_x_freq_0.0_Hz_ws_100' 'arm_acc_x_freq_0.1_Hz_ws_100'
+ 'arm_acc_y_max_freq' 'arm_acc_y_freq_weighted'
+ 'arm_acc_y_freq_0.0_Hz_ws_100' 'arm_acc_y_freq_0.1_Hz_ws_100'
+ 'arm_acc_z_max_freq' 'arm_acc_z_freq_weighted' 'arm_acc_z_pse'
+ 'arm_acc_z_freq_0.0_Hz_ws_100' 'arm_acc_z_freq_0.1_Hz_ws_100'
+ 'arm_acc_z_freq_1.6_Hz_ws_100' 'arm_acc_z_freq_1.9_Hz_ws_100'
+ 'leg_gyr_x_max_freq' 'leg_gyr_x_freq_weighted' 'leg_gyr_x_pse'
+ 'leg_gyr_x_freq_0.0_Hz_ws_100' 'leg_gyr_x_freq_0.1_Hz_ws_100'
+ 'leg_gyr_x_freq_0.4_Hz_ws_100' 'leg_gyr_y_max_freq'
+ 'leg_gyr_y_freq_weighted' 'leg_gyr_y_pse' 'leg_gyr_y_freq_0.0_Hz_ws_100'
+ 'leg_gyr_y_freq_0.1_Hz_ws_100' 'leg_gyr_z_max_freq' 'leg_gyr_z_pse'
+ 'leg_gyr_z_freq_0.0_Hz_ws_100' 'leg_acc_x_max_freq'
+ 'leg_acc_x_freq_weighted' 'leg_acc_x_pse' 'leg_acc_x_freq_0.0_Hz_ws_100'
+ 'leg_acc_x_freq_0.1_Hz_ws_100' 'leg_acc_y_max_freq'
+ 'leg_acc_y_freq_weighted' 'leg_acc_y_pse' 'leg_acc_y_freq_0.0_Hz_ws_100'
+ 'leg_acc_y_freq_0.1_Hz_ws_100' 'leg_acc_z_max_freq'
+ 'leg_acc_z_freq_weighted' 'leg_acc_z_pse' 'leg_acc_z_freq_0.0_Hz_ws_100'
+ 'leg_acc_z_freq_0.1_Hz_ws_100' 'leg_acc_z_freq_0.2_Hz_ws_100' 'HR_diff'
+ 'session_id_diff' 'arm_gyr_x_std' 'arm_gyr_y_std' 'arm_gyr_z_std'
+ 'arm_acc_x_std' 'arm_acc_y_std' 'arm_acc_z_std' 'leg_gyr_x_std'
+ 'leg_gyr_y_std' 'leg_gyr_z_std' 'leg_acc_x_std' 'leg_acc_y_std'
+ 'leg_acc_z_std' 'HR_std' 'session_id_std' 'leg_acc_y_minmax_diff'
+ 'arm_rot_abs' 'leg_rot_abs' 'arm_leg_max_diff' 'arm_leg_max_time_diff'
+ 'relative_rec' 'norm_leg_acc_rec' 'norm_leg_acc_push'
+ 'acc_x_derivative_diff' 'acc_y_derivative_diff' 'acc_z_derivative_diff']
+Selected features by SequentialFeatureSelector: ['time' 'arm_gyr_x' 'arm_gyr_y' 'arm_acc_x' 'arm_acc_y' 'session_id'
+ 'arm_gyr_x_freq_0.0_Hz_ws_100' 'arm_gyr_y_pse' 'arm_acc_x_max_freq'
+ 'arm_acc_y_freq_0.0_Hz_ws_100' 'arm_acc_z_freq_0.0_Hz_ws_100'
+ 'arm_acc_z_freq_1.6_Hz_ws_100' 'leg_gyr_x_freq_0.4_Hz_ws_100'
+ 'leg_gyr_y_max_freq' 'leg_acc_x_freq_0.1_Hz_ws_100' 'leg_acc_z_max_freq'
+ 'leg_acc_z_freq_0.0_Hz_ws_100' 'leg_acc_z_freq_0.1_Hz_ws_100'
+ 'session_id_diff' 'arm_gyr_y_std' 'arm_acc_z_std' 'leg_gyr_y_std'
+ 'leg_acc_x_std' 'acc_x_derivative_diff' 'acc_y_derivative_diff']
+time: 1328.7116401195526s
