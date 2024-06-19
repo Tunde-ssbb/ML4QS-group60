@@ -511,3 +511,66 @@ Selected features by SequentialFeatureSelector: ['time' 'arm_gyr_x' 'arm_gyr_y' 
  'session_id_diff' 'arm_gyr_y_std' 'arm_acc_z_std' 'leg_gyr_y_std'
  'leg_acc_x_std' 'acc_x_derivative_diff' 'acc_y_derivative_diff']
 time: 1328.7116401195526s
+
+---------------------------------------------------------------------------------------------------------------
+svc = LinearSVC(verbose=0, C=100, max_iter=1000, dual=False)
+session_id = 11
+exp_lvl = 3
+
+count 0: 54
+count 1: 99
+count 2: 0
+count 3: 2848
+count 4: 0
+Accuracy: 0.95
+Pipeline(steps=[('base',
+                 Pipeline(steps=[('scaler', StandardScaler()),
+                                 ('select_k_best', SelectKBest(k=100)),
+                                 ('sfs',
+                                  SequentialFeatureSelector(estimator=LinearSVC(C=100,
+                                                                                dual=False),
+                                                            n_features_to_select=25))])),
+                ('svc',
+                 OneVsRestClassifier(estimator=LinearSVC(C=100, dual=False)))])
+Selected features by SelectKBest: ['time' 'arm_gyr_x' 'arm_gyr_y' 'arm_gyr_z' 'arm_acc_x' 'arm_acc_y'
+ 'arm_acc_z' 'leg_gyr_y' 'leg_gyr_z' 'leg_acc_x' 'leg_acc_y' 'leg_acc_z'
+ 'HR' 'session_id' 'arm_gyr_x_max_freq' 'arm_gyr_x_freq_weighted'
+ 'arm_gyr_x_pse' 'arm_gyr_x_freq_0.0_Hz_ws_100' 'arm_gyr_y_max_freq'
+ 'arm_gyr_y_freq_weighted' 'arm_gyr_y_pse' 'arm_gyr_y_freq_0.0_Hz_ws_100'
+ 'arm_gyr_z_max_freq' 'arm_gyr_z_freq_weighted' 'arm_gyr_z_pse'
+ 'arm_gyr_z_freq_0.0_Hz_ws_100' 'arm_acc_x_max_freq'
+ 'arm_acc_x_freq_weighted' 'arm_acc_x_pse' 'arm_acc_x_freq_0.0_Hz_ws_100'
+ 'arm_acc_x_freq_0.1_Hz_ws_100' 'arm_acc_y_max_freq'
+ 'arm_acc_y_freq_weighted' 'arm_acc_y_freq_0.0_Hz_ws_100'
+ 'arm_acc_y_freq_0.1_Hz_ws_100' 'arm_acc_z_max_freq'
+ 'arm_acc_z_freq_weighted' 'arm_acc_z_pse' 'arm_acc_z_freq_0.0_Hz_ws_100'
+ 'arm_acc_z_freq_0.1_Hz_ws_100' 'arm_acc_z_freq_0.2_Hz_ws_100'
+ 'leg_gyr_x_max_freq' 'leg_gyr_x_freq_weighted' 'leg_gyr_x_pse'
+ 'leg_gyr_x_freq_0.0_Hz_ws_100' 'leg_gyr_x_freq_0.1_Hz_ws_100'
+ 'leg_gyr_y_max_freq' 'leg_gyr_y_freq_weighted' 'leg_gyr_y_pse'
+ 'leg_gyr_y_freq_0.0_Hz_ws_100' 'leg_gyr_y_freq_0.1_Hz_ws_100'
+ 'leg_gyr_y_freq_0.2_Hz_ws_100' 'leg_gyr_z_max_freq' 'leg_gyr_z_pse'
+ 'leg_gyr_z_freq_0.0_Hz_ws_100' 'leg_gyr_z_freq_0.1_Hz_ws_100'
+ 'leg_gyr_z_freq_0.2_Hz_ws_100' 'leg_acc_x_max_freq'
+ 'leg_acc_x_freq_weighted' 'leg_acc_x_pse' 'leg_acc_x_freq_0.0_Hz_ws_100'
+ 'leg_acc_x_freq_0.1_Hz_ws_100' 'leg_acc_y_max_freq'
+ 'leg_acc_y_freq_weighted' 'leg_acc_y_pse' 'leg_acc_y_freq_0.0_Hz_ws_100'
+ 'leg_acc_y_freq_0.1_Hz_ws_100' 'leg_acc_z_max_freq'
+ 'leg_acc_z_freq_weighted' 'leg_acc_z_pse' 'leg_acc_z_freq_0.0_Hz_ws_100'
+ 'leg_acc_z_freq_0.1_Hz_ws_100' 'leg_acc_z_freq_0.2_Hz_ws_100' 'HR_diff'
+ 'session_id_diff' 'arm_gyr_x_std' 'arm_gyr_y_std' 'arm_gyr_z_std'
+ 'arm_acc_x_std' 'arm_acc_y_std' 'arm_acc_z_std' 'leg_gyr_x_std'
+ 'leg_gyr_y_std' 'leg_gyr_z_std' 'leg_acc_x_std' 'leg_acc_y_std'
+ 'leg_acc_z_std' 'HR_std' 'session_id_std' 'leg_acc_y_minmax_diff'
+ 'arm_rot_abs' 'leg_rot_abs' 'arm_leg_max_diff' 'arm_leg_max_time_diff'
+ 'relative_rec' 'norm_leg_acc_rec' 'norm_leg_acc_push'
+ 'acc_x_derivative_diff' 'acc_y_derivative_diff' 'acc_z_derivative_diff']
+Selected features by SequentialFeatureSelector: ['arm_gyr_z' 'arm_acc_x' 'leg_gyr_y' 'leg_acc_y' 'HR' 'session_id'
+ 'arm_gyr_y_freq_weighted' 'arm_gyr_z_max_freq' 'arm_acc_x_freq_weighted'
+ 'arm_acc_z_max_freq' 'arm_acc_z_pse' 'arm_acc_z_freq_0.0_Hz_ws_100'
+ 'arm_acc_z_freq_0.2_Hz_ws_100' 'leg_gyr_z_max_freq'
+ 'leg_acc_x_freq_0.0_Hz_ws_100' 'leg_acc_y_freq_weighted'
+ 'leg_acc_z_max_freq' 'arm_gyr_x_std' 'arm_gyr_y_std' 'arm_acc_x_std'
+ 'arm_acc_z_std' 'leg_gyr_y_std' 'leg_gyr_z_std' 'arm_leg_max_diff'
+ 'acc_x_derivative_diff']
+time: 9464.283693552017s

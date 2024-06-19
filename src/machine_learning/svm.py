@@ -30,8 +30,7 @@ X_train, y_train, X_test, y_test = train_test_split_full_session(data, X, y, ses
 print(X_test)
 print(y_test)
 
-print(f"test set session id: {session_id}")
-print(f"exp lvl: {y_test.mean()}")
+
 
 
 start = time.time()
@@ -71,6 +70,9 @@ pipeline.fit(X_train, y_train)
 
 # Make predictions on the test data
 y_pred = pipeline.predict(X_test)
+
+print(f"test set session id: {session_id}")
+print(f"exp lvl: {y_test.mean()}")
 
 # Evaluate the model
 for i in range(5):
