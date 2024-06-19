@@ -4,10 +4,9 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 import time
+import util
 
-from util import train_test_split_full_session, read_and_preprocess, train_test_split_session_fraction
-
-data = read_and_preprocess()
+data = util.read_and_preprocess()
 
 target = 'exp_lvl'
 
@@ -16,9 +15,9 @@ yd = data[['time', target]]
 yd = yd[target].astype('category')
 y = pd.get_dummies(yd)
 
-session_id = 23
+session_id = 11
 
-X_train, y_train, X_test, y_test = train_test_split_session_fraction(data, X, y, 0.2)
+X_train, y_train, X_test, y_test = util.train_test_split_full_session( X, y, session_id)
 
 print(X_test)
 print(y_test)
@@ -72,22 +71,18 @@ ta = pd.from_dummies(y_test).squeeze(axis = 1)
 
 tr = y_pred.flatten()
 
+
 print(f"actual labels ({len(ta)}): {ta}")
 print(f"predicted labels ({len(tr)}): {tr}")
 
-
-known_labels = set(ta.unique())
-tr = np.array([label if label in known_labels else -1 for label in tr])
-
-ta = tr[tr != -1]
-tr = tr[tr != -1]
-
-print(f"no. of actual labels after unknown labels removed: {len(ta)}")
-print(f"no. of predicted labels after unknown labels removed: {len(tr)}")
+acc =  util.accuracy(tr, ta)
+print(f"calculated accuracy: {acc}")
 
 
-accuracy = accuracy_score(ta, tr)
-print(f'Accuracy: {accuracy:.2f}')
+
+
+#accuracy = accuracy_score(ta, tr)
+#print(f'Accuracy: {accuracy:.2f}')
 
 end = time.time()
 

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # define a custum train test split to preserve temporality of data
 def train_test_split_session_fraction(data, X, y, fraction):
@@ -67,3 +68,11 @@ def read_and_preprocess() -> pd.DataFrame:
 	data = data.fillna(0)
      
 	return data
+
+
+def accuracy(y_pred, y_true):
+     if len(y_pred) != len(y_true):
+          raise ValueError("pred and true must be same length")
+     
+
+     return np.sum(y_pred == y_true)/len(y_pred)
