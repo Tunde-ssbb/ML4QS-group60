@@ -135,6 +135,7 @@ def create_performance_plot(data, name_session, path):
     axs[1].scatter(data['time'], data['pace'], c=data['exp_lvl'], cmap=colormap)
     axs[1].set_ylabel("pace \n (s/500m)", fontsize = 20)
     axs[1].tick_params(labelsize = 16)
+    axs[1].set_ylim(100, 280)
 
 
     axs[2].scatter(data['time'], data['HR'], c=data['exp_lvl'], cmap=colormap)
@@ -270,6 +271,7 @@ def create_freq_distributions_by_experience_level_plot(data, feature_prefix, pat
 
     # Get unique experience levels
     exp_levels = data['exp_lvl'].unique()
+    exp_levels.sort()
     
     # Number of subplots (at most 5)
     num_subplots = min(len(exp_levels), 5)

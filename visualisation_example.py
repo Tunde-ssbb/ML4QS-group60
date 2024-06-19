@@ -8,57 +8,41 @@ import os
 
 
 # read data and define a name
-data_path = "./smaller_data.csv"
-data = pd.read_csv(data_path, index_col=0)
-
-path = os.path.abspath("./figures/freq_dist_per_lvl")
-
-features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
-
-for feature in features:
-    dv.create_freq_distributions_by_experience_level_plot(data, feature, path)
 
 
-#data = fe.feature_engineer(data)
-
-#print(data.columns)
-#print(data.shape)
-
-#data.to_csv("fe_data.csv")
-
-"""
+freq_path = os.path.abspath("./figures/freq_dist_per_lvl")
+fig_path = os.path.abspath("./figures")
+temp_path = os.path.abspath("./figures/temporal_frequency_new")
 
 
-features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
-
-features = []
-for feature in data.columns:
-    freq = ffe.extract_frequency(feature)
-    if freq != None:
-        features.append(feature)
-print(f"number of columns before: {len(data.columns)}")
-
-#data = remove_frequencies(data, 2)
-#data = calculate_window_difference(data, 3, data.columns[5:])
-#data = tfe.calculate_window_std(data, 100, features)
-
-print(f"number of columns after: {len(data.columns)}")
+data_path = "./measurement-data/full_data.csv"
+data = pd.read_csv(data_path)
 
 
-#data.to_csv("./smaller_data_.csv")
 
-#define folder which to save the plots to 
-path = os.path.abspath("./")
 
-#dv.create_distribution_plot(data, session_name, path)
-#dv.create_movement_plot(data, session_name, path)
-#dv.create_performance_plot(data, session_name, path)
+#dv.create_movement_plot(data, "full_data", fig_path)
+dv.create_performance_plot(data, "full_data" , fig_path)
 
-features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
 
-features = ['arm_gyr_x']
-for feature in features:
-    dv.create_freq_distributions_by_experience_level_plot(data, feature, path)
+# data_path = "./src/machine_learning/fouried_data.csv"
+# data = pd.read_csv(data_path)
 
-"""
+# features = ['arm_gyr_x', 'arm_gyr_y', 'arm_gyr_z', 'arm_acc_x', 'arm_acc_y', 'arm_acc_z', 'leg_gyr_x', 'leg_gyr_y', 'leg_gyr_z', 'leg_acc_x', 'leg_acc_y', 'leg_acc_z']
+
+# for feature in features:
+#     dv.create_temporal_frequency_plot(data, feature, temp_path)
+
+
+# for feature in features:
+#     dv.create_freq_distributions_by_experience_level_plot(data, feature, freq_path)
+
+# dv.create_distribution_plot(data, "full_data",  fig_path)
+
+
+
+
+
+
+
 
