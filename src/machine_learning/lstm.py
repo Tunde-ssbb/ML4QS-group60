@@ -1,7 +1,6 @@
 import keras
 from keras.layers import LSTM, Dropout, Dense
 from sklearn.metrics import accuracy_score
-import tensorflow as tf
 import numpy as np
 import pandas as pd
 import time
@@ -52,3 +51,7 @@ for i in range(5):
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
+
+end = time.time()
+
+print(f"time: {end-start}s")
