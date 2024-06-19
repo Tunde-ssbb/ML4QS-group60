@@ -17,7 +17,7 @@ y = data[target]
 
 session_id = 23
 
-X_train, y_train, X_test, y_test = train_test_split_full_session(data, X, y, session_id)
+X_train, y_train, X_test, y_test = train_test_split_full_session( X, y, session_id)
 
 print(X_test)
 print(y_test)
@@ -25,18 +25,28 @@ print(y_test)
 print(f"test set session id: {session_id}")
 print(f"exp lvl: {y_test.mean()}")
 
+array = X_train.values
+array = np.reshape(array, (1,  X_train.shape[0], X_train.shape[1]))
+
+X_train = array
+
+y_train = y_train.to_numpy()
+y_train = y_train.reshape(1,-1)
+
+print(X_train.shape[0], X_train.shape[1], X_train.shape[2])
 
 start = time.time()
 
 model = keras.Sequential()
-model.add(LSTM(100))
+model.add(LSTM(100, input_shape=( X_train.shape[1], X_train.shape[2])))
 model.add(Dropout(0.5))
 model.add(Dense(5, activation="softmax"))
 model.compile(loss="sparse_categorical_crossentropy"
               , metrics=['acc']
               , optimizer="adam")
 
-model.summary()
+
+#model.summary()
 
 model.fit(X_train, y_train)
 

@@ -53,7 +53,7 @@ def train_test_split_full_session(X, y, test_session_id):
 def read_and_preprocess() -> pd.DataFrame:
 	columns_to_drop = ['dist' , 'pace']
 	
-	data = pd.read_csv("./src/machine_learning/fouried_data.csv")
+	data = pd.read_csv("./measurement-data/full_data_time.csv")
 	
 	data = data.drop(columns = columns_to_drop)
 	
