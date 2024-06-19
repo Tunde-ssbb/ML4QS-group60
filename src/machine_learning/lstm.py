@@ -1,5 +1,6 @@
 import keras
 from keras.layers import LSTM, Dropout, Dense
+from sklearn.metrics import accuracy_score
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -28,10 +29,10 @@ print(f"exp lvl: {y_test.mean()}")
 start = time.time()
 
 model = keras.Sequential()
-model.add(LSTM(100, input_shape = (10, 28)))
+model.add(LSTM(100))
 model.add(Dropout(0.5))
-model.add(Dense(5, activation="sigmoid"))
-model.compile(loss="categorical_crossentropy"
+model.add(Dense(5, activation="softmax"))
+model.compile(loss="sparse_categorical_crossentropy"
               , metrics=['acc']
               , optimizer="adam")
 
@@ -41,9 +42,9 @@ model.fit(X_train, y_train)
 
 model.evaluate(X_test, y_test)
 
-y_test_prob = model.predict(X_test, verbose=1)
+y_test_scores = model.predict(X_test, verbose=1)
 
-y_test_pred = np.where(y_test_prob > 0.5, 1, 0)
+y_pred = np.argmax(y_test_scores, axis=1) #  np.where(y_test_prob > 0.5, 1, 0)
 
 # Evaluate the model
 for i in range(5):
