@@ -1,7 +1,6 @@
 import keras
 from keras.layers import LSTM, Dropout, Dense
 from sklearn.metrics import accuracy_score
-import tensorflow as tf
 import numpy as np
 import pandas as pd
 import time
@@ -17,7 +16,7 @@ y = data[target]
 
 session_id = 23
 
-X_train, y_train, X_test, y_test = train_test_split_full_session( X, y, session_id)
+X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
 
 print(X_test)
 print(y_test)
@@ -62,3 +61,7 @@ for i in range(5):
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
+
+end = time.time()
+
+print(f"time: {end-start}s")
