@@ -25,7 +25,7 @@ session_id = 23
 """
     session id 1 -> 1000, 1000 with 100% accuracy
 """
-X_train, y_train, X_test, y_test = train_test_split_full_session(data, X, y, session_id)
+X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
 
 print(X_test)
 print(y_test)

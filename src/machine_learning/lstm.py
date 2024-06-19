@@ -16,7 +16,7 @@ y = data[target]
 
 session_id = 23
 
-X_train, y_train, X_test, y_test = train_test_split_full_session(data, X, y, session_id)
+X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
 
 print(X_test)
 print(y_test)
