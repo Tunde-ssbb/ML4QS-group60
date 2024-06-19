@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import time
 
-from util import train_test_split_full_session, read_and_preprocess
+from util import train_test_split_full_session, read_and_preprocess, train_test_split_session_fraction
 
 data = read_and_preprocess()
 
@@ -18,7 +18,7 @@ y = pd.get_dummies(yd)
 
 session_id = 23
 
-X_train, y_train, X_test, y_test = train_test_split_full_session(X, y, session_id)
+X_train, y_train, X_test, y_test = train_test_split_session_fraction(data, X, y, 0.2)
 
 print(X_test)
 print(y_test)
@@ -68,10 +68,23 @@ print(y_pred)
 for i in range(5):
     print(f"count {i}: {(y_pred == i).sum()}")
 
-ta = pd.from_dummies(y_test).squeeze(axis=1)
-print(ta)
+ta = pd.from_dummies(y_test).squeeze(axis = 1)
+
 tr = y_pred.flatten()
-print(tr)
+
+print(f"actual labels ({len(ta)}): {ta}")
+print(f"predicted labels ({len(tr)}): {tr}")
+
+
+known_labels = set(ta.unique())
+tr = np.array([label if label in known_labels else -1 for label in tr])
+
+ta = tr[tr != -1]
+tr = tr[tr != -1]
+
+print(f"no. of actual labels after unknown labels removed: {len(ta)}")
+print(f"no. of predicted labels after unknown labels removed: {len(tr)}")
+
 
 accuracy = accuracy_score(ta, tr)
 print(f'Accuracy: {accuracy:.2f}')
