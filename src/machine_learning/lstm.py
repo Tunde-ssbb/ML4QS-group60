@@ -7,7 +7,7 @@ import time
 import util
 import tensorflow as tf
 
-def run_LSTM(data, session_id, random_seed = 42):
+def run_LSTM(data, session_id, units=100, drop=0.5, random_seed = 42):
     np.random.seed(random_seed)
 
     target = 'exp_lvl'
@@ -40,8 +40,8 @@ def run_LSTM(data, session_id, random_seed = 42):
     start = time.time()
 
     model = keras.Sequential()
-    model.add(LSTM(100, return_sequences=True))
-    model.add(Dropout(0.5))
+    model.add(LSTM(units, return_sequences=True))
+    model.add(Dropout(drop))
     model.add(Dense(y.shape[1], activation="softmax"))
     model.compile(loss="categorical_crossentropy"
                 , metrics=['acc']
@@ -117,7 +117,7 @@ trs = []
 levels = []
 
 for session_id in session_ids:
-    acc, tr, exp_lvl = run_LSTM(data, session_id)
+    acc, tr, exp_lvl = run_LSTM(data, session_id, units=100, drop=0.5)
 
     accuracies.append(acc)
     trs.append(np.mean(tr))
