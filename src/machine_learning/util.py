@@ -51,10 +51,10 @@ def train_test_split_full_session(X, y, test_session_id):
 
     return X_train, y_train, X_test, y_test
 
-def read_and_preprocess() -> pd.DataFrame:
+def read_and_preprocess(path) -> pd.DataFrame:
 	columns_to_drop = ['dist' , 'pace']
 	
-	data = pd.read_csv("./measurement-data/full_data_time.csv")
+	data = pd.read_csv(path)
 	
 	data = data.drop(columns = columns_to_drop)
 	

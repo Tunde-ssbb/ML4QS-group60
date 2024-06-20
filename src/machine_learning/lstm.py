@@ -86,10 +86,30 @@ def run_LSTM(data, session_id, random_seed = 42):
     return acc, tr, np.argmax(y_test.mean())
 
 
-data = util.read_and_preprocess()
+
+
+best_25 = ['arm_gyr_z', 'arm_acc_x', 'leg_gyr_y', 'leg_acc_y', 'HR', 'session_id',
+ 'arm_gyr_y_freq_weighted', 'arm_gyr_z_max_freq', 'arm_acc_x_freq_weighted',
+ 'arm_acc_z_max_freq', 'arm_acc_z_pse', 'arm_acc_z_freq_0.0_Hz_ws_100',
+ 'arm_acc_z_freq_0.2_Hz_ws_100', 'leg_gyr_z_max_freq',
+ 'leg_acc_x_freq_0.0_Hz_ws_100', 'leg_acc_y_freq_weighted',
+ 'leg_acc_z_max_freq', 'arm_gyr_x_std', 'arm_acc_x_std',
+ 'arm_acc_z_std', 'leg_gyr_y_std', 'leg_gyr_z_std', 'arm_leg_max_diff',
+ 'acc_x_derivative_diff','arm_gyr_y_std']
+
+base = ['exp_lvl', 'time']
+
+data = util.read_and_preprocess("fouried_data.csv")
+print(data.columns)
+for feature in data.columns:
+    if not (feature in (best_25 + base)):
+        data = data.drop(columns=feature)
+
+
+
+print(data.shape)
 
 session_ids = data['session_id'].unique()
-
 accuracies = []
 trs = []
 levels = []
