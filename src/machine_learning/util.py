@@ -48,27 +48,38 @@ def train_test_split_full_session(X, y, test_session_id):
 
     X_train = X.loc[X['session_id'] != test_session_id]
     y_train = y.loc[X['session_id'] != test_session_id]
-
+    print('blaba')
     return X_train, y_train, X_test, y_test
 
-def read_and_preprocess(path) -> pd.DataFrame:
-	columns_to_drop = ['dist' , 'pace']
+# def read_and_preprocess(path) -> pd.DataFrame:
+# 	columns_to_drop = ['dist' , 'pace']
 	
-	data = pd.read_csv(path)
+# 	data = pd.read_csv(path)
 	
-	data = data.drop(columns = columns_to_drop)
+# 	data = data.drop(columns = columns_to_drop)
 	
-	# Assuming 'data' is your DataFrame and 'exp_lvl' is the target column
-	# Make sure the 'time' column is in datetime format
-	data['time'] = pd.to_datetime(data['time'])
+# 	# Assuming 'data' is your DataFrame and 'exp_lvl' is the target column
+# 	# Make sure the 'time' column is in datetime format
+# 	data['time'] = pd.to_datetime(data['time'])
 	
-	# Preprocess the time column to extract features
-	data['time'] = data['time'].astype('int64')
+# 	# Preprocess the time column to extract features
+# 	data['time'] = data['time'].astype('int64')
 	
-	data = data.fillna(0)
+# 	data = data.fillna(0)
      
-	return data
+# 	return data
 
+# def hussel(data):
+def read_and_preprocess(path) -> pd.DataFrame:
+    columns_to_drop = ['dist', 'pace']
+    data = pd.read_csv(path)
+    data = data.drop(columns=columns_to_drop)
+    data['time'] = pd.to_datetime(data['time'])
+    data['time'	] = data['time'].astype('int64')
+    data['time'] = data['time'] - data['time'][0] 
+    data['time'	] = data.index *0.1
+    data= data.fillna(0)
+    return data     
 
 def accuracy(y_pred, y_true):
      if len(y_pred) != len(y_true):
@@ -76,3 +87,5 @@ def accuracy(y_pred, y_true):
      
 
      return np.sum(y_pred == y_true)/len(y_pred)
+
+
