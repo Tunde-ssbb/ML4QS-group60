@@ -99,7 +99,7 @@ best_25 = ['arm_gyr_z', 'arm_acc_x', 'leg_gyr_y', 'leg_acc_y', 'HR', 'session_id
 
 base = ['exp_lvl', 'time']
 
-data = util.read_and_preprocess("fouried_data.csv")
+data = util.read_and_preprocess("./src/machine_learning/fouried_data.csv")
 print(data.columns)
 for feature in data.columns:
     if not (feature in (best_25 + base)):
@@ -110,6 +110,8 @@ for feature in data.columns:
 print(data.shape)
 
 session_ids = data['session_id'].unique()
+
+print(f"Testing for sessions {session_ids}")
 accuracies = []
 trs = []
 levels = []
