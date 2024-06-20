@@ -6,11 +6,13 @@ import pandas as pd
 import time
 import util
 import tensorflow as tf
+from keras.optimizers import Adam
+from sklearn.preprocessing import StandardScaler
 
 def run_LSTM(data, session_id, random_seed = 42):
     np.random.seed(random_seed)
 
-    target = 'exp_lvl'
+    target = 'exp_lvl' 
 
     X = data.drop(columns=target)
     yd = data[['time', target]]
@@ -20,6 +22,17 @@ def run_LSTM(data, session_id, random_seed = 42):
   
     X_train, y_train, X_test, y_test = util.train_test_split_full_session( X, y, session_id)
 
+    scaler = StandardScaler()  # MinMaxScaler(feature_range=(-1,1))
+    X_train = pd.DataFrame(scaler.fit_transform(X_train.values),
+                                     index=X_train.index,
+                                     columns=X_train.columns)
+    # The Scaler is fit on the training set and then applied to the test set
+    X_test = pd.DataFrame(scaler.transform(X_test.values),
+                                    index=X_test.index,
+                                    columns=X_test.columns)
+
+    X_train = X_train.drop(columns = 'session_id')
+    X_test = X_test.drop(columns = 'session_id')
     print(X_test)
     print(y_test)
 
@@ -40,16 +53,17 @@ def run_LSTM(data, session_id, random_seed = 42):
     start = time.time()
 
     model = keras.Sequential()
-    model.add(LSTM(100, return_sequences=True))
-    model.add(Dropout(0.5))
+    model.add(LSTM(50, return_sequences=True))
+    model.add(Dropout(0.8))
+    print(y.shape[1])
     model.add(Dense(y.shape[1], activation="softmax"))
     model.compile(loss="categorical_crossentropy"
                 , metrics=['acc']
-                , optimizer="adam")
+                , optimizer=Adam(learning_rate=0.1))
 
     #model.summary()
 
-    model.fit(X_train_rs, y_train_rs, batch_size=1, epochs=20)
+    model.fit(X_train_rs, y_train_rs, batch_size=16, epochs=20)
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test_rs, y_test_rs)
@@ -116,7 +130,7 @@ accuracies = []
 trs = []
 levels = []
 
-for session_id in session_ids:
+for session_id in [31]:
     acc, tr, exp_lvl = run_LSTM(data, session_id)
 
     accuracies.append(acc)
