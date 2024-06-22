@@ -62,7 +62,7 @@ def run_LSTM(data, session_id, units=100, drop=0.5, random_seed = 42):
 
     #model.summary()
 
-    model.fit(X_train_rs, y_train_rs, batch_size=16, epochs=20)
+    model.fit(X_train_rs, y_train_rs, batch_size=16, epochs=30)
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test_rs, y_test_rs)
@@ -96,23 +96,31 @@ def run_LSTM(data, session_id, units=100, drop=0.5, random_seed = 42):
 
 def run_LSTM_r(data, units=100, drop=0.5):
     # np.random.seed(random_seed)
-   
+    lengte = 0
     all_chunks = util.hussel(data, 300, 3000)
-    test_chunks, train_chunks = util.shuffle_test_train(all_chunks)
-
+    while lengte < 12:
+        test_chunks, tra_chunks = util.shuffle_test_train(all_chunks, 7000)
+        valid_chunks, train_chunks = util.shuffle_test_train(tra_chunks, 7000)
+        test_df = pd.concat(test_chunks).reset_index(drop=True)
+        train_df = pd.concat(train_chunks).reset_index(drop=True)
+        valid_df = pd.concat(valid_chunks).reset_index(drop=True)
+        lengte = len(set(valid_df['exp_lvl'])) + len(set(train_df['exp_lvl'])) + len(set(test_df['exp_lvl']))
+        print(lengte)
+ 
     # Concatenate the test and training chunks into separate DataFrames
-    test_df = pd.concat(test_chunks).reset_index(drop=True)
-    train_df = pd.concat(train_chunks).reset_index(drop=True)
+    
 
     # Adjust time columns to maintain continuity
     test_df['time'] = np.linspace(0, (len(test_df) - 1) * 0.1, len(test_df))  
     train_df['time'] = np.linspace(0, (len(train_df) - 1) * 0.1, len(train_df)) 
+    valid_df['time'] = np.linspace(0, (len(valid_df) - 1) * 0.1, len(valid_df)) 
 
     data = pd.concat(all_chunks).reset_index(drop=True)
     data['time'] = np.linspace(0, (len(data) - 1) * 0.1, len(data))
 
     print(len(test_df))
     print(len(train_df))
+    print(len(valid_df))
 
     target = 'exp_lvl' 
     y_train_d = train_df[['time', target]]
@@ -125,17 +133,32 @@ def run_LSTM_r(data, units=100, drop=0.5):
     y_test = pd.get_dummies(y_test_df)
     X_test = test_df.drop(columns=target)
 
+    y_valid_d = valid_df[['time', target]]
+    y_valid_df = y_valid_d[target].astype('category')
+    # print(y_valid_df)
+    # all_labels = [0, 1, 2, 3]
+    # y_valid = pd.get_dummies(valid_df[target]).reindex(columns=all_labels, fill_value=0)
+    y_valid = pd.get_dummies(y_valid_df)
+    X_valid = valid_df.drop(columns=target)
+
     scaler = StandardScaler()  # MinMaxScaler(feature_range=(-1,1))
     X_train = pd.DataFrame(scaler.fit_transform(X_train.values),
                                      index=X_train.index,
                                      columns=X_train.columns)
+    
+     #defining validation set
+    X_valid = pd.DataFrame(scaler.transform(X_valid.values),
+                                    index=X_valid.index,
+                                    columns=X_valid.columns)
     # The Scaler is fit on the training set and then applied to the test set
     X_test = pd.DataFrame(scaler.transform(X_test.values),
                                     index=X_test.index,
                                     columns=X_test.columns)
+   
 
     X_train = X_train.drop(columns = 'session_id')
     X_test = X_test.drop(columns = 'session_id')
+    X_valid = X_valid.drop(columns='session_id')
     print(X_test)
     print(y_test)
 
@@ -144,11 +167,16 @@ def run_LSTM_r(data, units=100, drop=0.5):
     # Reshape the test data to fit the LSTM input requirements
     X_test_rs = X_test.values.reshape(1, X_test.shape[0], X_test.shape[1])
 
+    X_valid_rs = X_valid.values.reshape(1, X_valid.shape[0], X_valid.shape[1])
+
     # Reshape y_train to match the number of samples
     y_train_rs = y_train.values.reshape(1, y_train.shape[0], y_train.shape[1])
     y_test_rs = y_test.values.reshape(1, y_test.shape[0], y_test.shape[1])
+    y_valid_rs = y_valid.values.reshape(1, y_valid.shape[0], y_valid.shape[1])
+
     print(y_train_rs.shape)
     print(y_test_rs.shape)
+    print(y_valid_rs.shape)
 
     start = time.time()
 
@@ -162,7 +190,7 @@ def run_LSTM_r(data, units=100, drop=0.5):
 
     #model.summary()
 
-    model.fit(X_train_rs, y_train_rs, batch_size=16, epochs=50)
+    model.fit(X_train_rs, y_train_rs, validation_data=(X_valid_rs, y_valid_rs), batch_size=16, epochs=30)
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test_rs, y_test_rs)
@@ -193,7 +221,7 @@ def run_LSTM_r(data, units=100, drop=0.5):
     end = time.time()
     print(f"time: {end-start}s")
 
-    return acc, tr
+    return acc, tr, 0
 
 
 best_25 = ['arm_gyr_z', 'arm_acc_x', 'leg_gyr_y', 'leg_acc_y', 'HR', 'session_id',
@@ -203,7 +231,7 @@ best_25 = ['arm_gyr_z', 'arm_acc_x', 'leg_gyr_y', 'leg_acc_y', 'HR', 'session_id
  'leg_acc_x_freq_0.0_Hz_ws_100', 'leg_acc_y_freq_weighted',
  'leg_acc_z_max_freq', 'arm_gyr_x_std', 'arm_acc_x_std',
  'arm_acc_z_std', 'leg_gyr_y_std', 'leg_gyr_z_std', 'arm_leg_max_diff',
- 'acc_x_derivative_diff','arm_gyr_y_std']
+ 'acc_x_derivative_diff','arm_gyr_y_std', 'relative_rec']
 
 base = ['exp_lvl', 'time']
 
@@ -216,17 +244,17 @@ for feature in data.columns:
 
 
 print(data.shape)
-session_ids = data['session_id'].unique()
 
-print(f"Testing for sessions {session_ids}")
 accuracies = []
 trs = []
 levels = []
 random = True #change random value to false to train non randomized data with a full session as test id. 
 
 if not random:
+    session_ids = data['session_id'].unique()
+    print(f"Testing for sessions {session_ids}")
     for session_id in session_ids:
-        acc, tr, exp_lvl = run_LSTM(data, session_id, units=50, drop=0.8, random=False)
+        acc, tr, exp_lvl = run_LSTM(data, session_id, units=50, drop=0.8)
 
         accuracies.append(acc)
         trs.append(np.mean(tr))
@@ -235,11 +263,13 @@ if not random:
     for session, accuracy, exp_lvl, tr in zip(session_ids, accuracies, levels, trs):
         print(session, accuracy, exp_lvl, tr, sep='\t\t')
 else: 
-    listi = [0, 1, 2, 3]
+    listi = [0, 1, 10, 11, 20, 21, 30, 31]
+    settings = [ 0.8, 0.4]
     for i in listi:
-        acc, tr = run_LSTM_r(data, units=50, drop=0.8)
-        accuracies.append(acc)
-        trs.append(np.mean(tr))
+        for j in settings:
+            acc, tr, his = run_LSTM_r(data, units=20, drop=j)
+            accuracies.append(acc)
+            trs.append(np.mean(tr))
 
     for session, accuracy, tr in zip(listi, accuracies, trs):
         print(session, accuracy, tr, sep='\t\t')

@@ -101,12 +101,12 @@ def hussel(data, min_chunk_size = 300, max_chunk_size = 3000):
     # Concatenate the shuffled chunks into a single DataFrame
     return all_chunks
 
-def shuffle_test_train(chunks):
+def shuffle_test_train(chunks, duration=7000):
     test_chunks = []
     train_chunks = []
     cumulative_test_duration = 0
     exp_lvls_in_test = set()
-    test_duration = 7000
+    test_duration = duration
 
     for chunk in chunks:
         if cumulative_test_duration < test_duration or len(exp_lvls_in_test) < 4:
@@ -121,7 +121,21 @@ def shuffle_test_train(chunks):
 
     # print(len(train_chunks))
     # print(len(test_chunks))
+    np.random.shuffle(train_chunks)
     return test_chunks, train_chunks
+
+def get_validation(train_chunks):
+    valid_chunks = []
+    new_training = []
+    total_duration = 0
+    test_duration = 5000
+    for chunk in train_chunks:
+        if total_duration < test_duration:
+            valid_chunks.append(chunk)
+            total_duration += len(chunk)
+        else:
+            new_training.append(chunk)
+    return valid_chunks, new_training
 
 
 
